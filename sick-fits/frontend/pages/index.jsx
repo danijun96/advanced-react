@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 class Home extends React.Component {
-  render () {
+  render() {
     return (
       <div>
         <p>Hey</p>
@@ -9,7 +9,7 @@ class Home extends React.Component {
           <a>sell</a>
         </Link>
       </div>
-    )
+    );
   }
 }
 
