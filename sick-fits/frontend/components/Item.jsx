@@ -10,7 +10,6 @@ import formatMoney from '../lib/formatMoney';
 class Item extends Component {
   render() {
     const { item } = this.props;
-    console.log(item)
     return (
       <ItemStyles>
         {item.image && <img src={item.image} alt={item.title} />}

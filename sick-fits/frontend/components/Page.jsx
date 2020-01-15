@@ -31,8 +31,7 @@ const Inner = styled.div`
 injectGlobal`
   @font-face {
     font-family: 'radnika_next';
-    src: url('/static/radnikanext-medium-webfont.woff2')
-    format('w0ff2');
+    src: url('/static/radnikanext-medium-webfont.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
   }

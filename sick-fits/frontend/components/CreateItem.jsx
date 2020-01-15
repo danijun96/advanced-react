@@ -70,11 +70,11 @@ class CreateItem extends Component {
         {(createItem, { loading, error }) => (
           <Form
             onSubmit={async e => {
-              //stop the page from refresh
+              // stop the page from refresh
               e.preventDefault();
               // call the mutation
               const res = await createItem();
-              //change to single item page
+              // change to single item page
               Router.push({
                 pathname: '/item',
                 query: { id: res.data.createItem.id },
