@@ -7,13 +7,22 @@ const { transport, makeANiceEmail } = require('../mail');
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
+    if (!ctx.request.userId) {
+      throw new Error('You must be logged in to do that');
+    }
     // TODO: check if ther are logged in
     const item = await ctx.db.mutation.createItem({
       data: {
+        // This is how to create a relationship between the item and the User
+        user: {
+          connect: {
+            id: ctx.request.userId
+          }
+        },
         ...args
       }
     }, info);
-    
+
     return item;
   },
   // createDog(parent, args, ctx, info) {
@@ -116,7 +125,7 @@ const Mutations = {
       to: user.email,
       subject: 'Your PassWord reset Token',
       html: makeANiceEmail(`Your PassWord Reset Token is here! \n\n
-        <a href="${process.env.FRONTEND_URL}/reset/?resetToken=${resetToken}">Click Here to Reset</a>`)
+        <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Click Here to Reset</a>`)
     });
     return { message: 'Thanks' }
   },
