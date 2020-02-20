@@ -20,7 +20,7 @@ const User = props => (
 );
 
 User.PropTypes = {
-  children: PropTypes.func.isRequired,
+  children: propTypes.func.isRequired,
 };
 
 export default User;

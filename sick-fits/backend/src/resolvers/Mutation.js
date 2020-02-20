@@ -192,7 +192,7 @@ const Mutations = {
       }
     }, info);
     // 3. Check if they have permissions to do this
-    hasPermission(currentUser, ['ADMIN', 'PERMISSIONUPDATE'])
+    hasPermission(currentUser, ['ADMIN', 'PERMISSIONUPDATE']);
     // 4. update the permission
     return ctx.db.mutation.updateUser({
       data: {
@@ -206,6 +206,58 @@ const Mutations = {
     }, info);
   },
 
+  async addToCart(parent, args, ctx, info) {
+    //1. make sure they are signed in
+    const { userId } = ctx.request;
+    if(!userId) {
+      throw new Error('you must be signed in');
+    }
+    //2. Query the users current cart
+    const [existingCartItem] = await ctx.db.query.cartItems({
+     where: {
+       user: { id: userId },
+       item: { id: args.id }
+     }
+    });
+    //3. Check if that item is already in their cart and increment it by 1 if it is
+    if(existingCartItem) {
+      console.log('This item is already in their cart');
+      return ctx.db.mutation.updateCartItem({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + 1 }
+      }, info);
+    }
+    //4. If it's not, create a fresh CartItem for that user!
+    return ctx.db.mutation.createCartItem({
+      data: {
+        user: {
+          connect: { id: userId },
+        },
+        item: {
+          connect: { id: args.id },
+        }
+      }
+    }, info)
+  },
+
+  async removeFromCart(parent, args, ctx, info) {
+    // 1. Find the cart item
+    const cartItem = await ctx.db.query.cartItem({
+      where: {
+        id: args.id,
+      },
+    }, `{ id, user { id }}`);
+    // 1.5 make sure we found an item
+    if (!cartItem) throw new Error('No cartitem found');
+    // 2. Make sure they own that cart item
+    if(cartItem.user.id !== ctx.request.userId) {
+      throw new Error('Cheatin huhhh');
+    }
+    // 3. Delete that cart item
+    return ctx.db.mutation.deleteCartItem({
+      where: { id: args.id },
+    }, info)
+  }
 };
 
 module.exports = Mutations;

@@ -51,6 +51,7 @@ class Signin extends Component {
                   placeholder="email"
                   value={this.state.email}
                   onChange={this.saveToState}
+                  required={}
                 />
               </label>
               <label htmlFor="password">
